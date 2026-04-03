@@ -2,7 +2,7 @@
   <img src="../assets/RetinexDualV2_Logo.png" alt="RetinexDualV2 Logo" width="300">
 </p>
 
-# [CVPRW26] RetinexDualV2: Physically-Grounded Dual Retinex for Generalized UHD Image Restoration
+# RetinexDualV2: Physically-Grounded Dual Retinex for Generalized UHD Image Restoration
 <p align="center">
   <a href="https://arxiv.org/pdf/2603.27979.pdf">
     <img src="https://img.shields.io/badge/Arxiv-2603.27979-red" alt="arxiv">
@@ -33,7 +33,7 @@
 
 If you find our work useful in your research, please consider citing our papers:
 
-### RetinexDualV2 (CVPRW 2026)
+### RetinexDualV2
 ```bibtex
 @inproceedings{kishawy2026retinexdualv2,
   title={RetinexDualV2: Physically-Grounded Dual Retinex for Generalized UHD Image Restoration},
