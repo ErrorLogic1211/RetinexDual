@@ -35,10 +35,10 @@ If you find our work useful in your research, please consider citing our papers:
 
 ### RetinexDualV2
 ```bibtex
-@inproceedings{kishawy2026retinexdualv2,
+@article{kishawy2026retinexdualv2,
   title={RetinexDualV2: Physically-Grounded Dual Retinex for Generalized UHD Image Restoration},
   author={Kishawy, Mohab and Chen, Jun},
-  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops (CVPRW)},
+  journal={arXiv preprint arXiv:2603.27979},
   year={2026}
 }
 ```
