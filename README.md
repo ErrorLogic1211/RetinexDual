@@ -28,7 +28,7 @@
 
 
 <details>
-<summary><h2>[CVPRW26] RetinexDualV2: Physically-Grounded Dual Retinex for Generalized UHD Image Restoration</h2></summary>
+<summary><h1>[CVPRW26] RetinexDualV2: Physically-Grounded Dual Retinex for Generalized UHD Image Restoration</h1></summary>
 
 <br>
 
