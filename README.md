@@ -1,12 +1,16 @@
 <p align="center">
-  <img src="assets/RetinexDual_Logo.pdf" alt="RetinexDual Logo" width="200">
+  <img src="assets/RetinexDual_Logo.png" alt="RetinexDual Logo" width="200">
 </p>
 
 # RetinexDual
 
 <p align="center">
-  [![arxiv](https://img.shields.io/badge/Arxiv-2508.04797-red)](https://arxiv.org/pdf/2508.04797.pdf)
-  [![arxiv](https://img.shields.io/badge/Arxiv-2603.27979-red)](https://arxiv.org/pdf/2603.27979.pdf)
+  <a href="https://arxiv.org/pdf/2508.04797.pdf">
+    <img src="https://img.shields.io/badge/Arxiv-2508.04797-red" alt="arxiv">
+  </a>
+  <a href="https://arxiv.org/pdf/2603.27979.pdf">
+    <img src="https://img.shields.io/badge/Arxiv-2603.27979-red" alt="arxiv">
+  </a>
 </p>
 
 <p align="center">
