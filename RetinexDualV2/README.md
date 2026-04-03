@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="../assets/RetinexDual_Logo.png" alt="RetinexDual Logo" width="300">
+  <img src="../assets/RetinexDualV2_Logo.png" alt="RetinexDualV2 Logo" width="300">
 </p>
 
 # [CVPRW26] RetinexDualV2: Physically-Grounded Dual Retinex for Generalized UHD Image Restoration
