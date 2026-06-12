@@ -177,10 +177,10 @@ We thank the authors for their excellent work.
 If you find our work useful in your research, please consider citing our paper:
 
 ```bibtex
-@article{kishawy2025retinexdual,
+@inproceedings{kishawy2026retinexdual,
   title={RetinexDual: Retinex-based Dual Nature Approach for Generalized Ultra-High-Definition Image Restoration},
   author={Kishawy, Mohab and Hussein, Ali Abdellatif and Chen, Jun},
-  journal={arXiv preprint arXiv:2508.04797},
-  year={2025}
+  booktitle={International Conference on Pattern Recognition (ICPR)},
+  year={2026}
 }
 ```
