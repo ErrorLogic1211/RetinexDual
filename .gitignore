@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.eggs/
+build/
+dist/
+develop-eggs/
+
+# Training / inference outputs
+experiments/
+results/
+tb_logger/
+*.log
+
+# Datasets & weights (download separately; see README)
+datasets/
+pretrained_weights/
+*.pth
+*.pt
+*.ckpt
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
