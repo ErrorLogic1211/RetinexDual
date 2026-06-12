@@ -38,7 +38,9 @@ The same architecture is trained for four UHD restoration tasks: **Low-Light Enh
 
 ## News
 
-- **2026-06** : Code and pre-trained models are released. 🎉
+- **2026-06-12** : Code and pre-trained models are released. 🎉
+- **2026-06-06** : RetinexDual is accepted to **ICPR 2026**! 🎉
+- **2025-08-06** : The arXiv preprint ([arXiv:2508.04797](https://arxiv.org/abs/2508.04797)) is released.
 
 ## Installation
 
@@ -180,7 +182,9 @@ If you find our work useful in your research, please consider citing our paper:
 @inproceedings{kishawy2026retinexdual,
   title={RetinexDual: Retinex-based Dual Nature Approach for Generalized Ultra-High-Definition Image Restoration},
   author={Kishawy, Mohab and Hussein, Ali Abdellatif and Chen, Jun},
-  booktitle={International Conference on Pattern Recognition (ICPR)},
+  booktitle={Proceedings of the 28th International Conference on Pattern Recognition (ICPR)},
+  address={Lyon, France},
+  month={August},
   year={2026}
 }
 ```
