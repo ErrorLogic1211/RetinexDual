@@ -1,0 +1,25 @@
+RetinexDual
+Copyright 2025-2026 Mohab Kishawy, Ali Abdellatif Hussein, Jun Chen
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This product includes software developed as part of the following projects:
+
+* BasicSR (https://github.com/XPixelGroup/BasicSR)
+  Copyright 2018-2022 BasicSR Authors — Apache License 2.0.
+  The `basicsr/` package (training/testing engine, data pipeline, metrics,
+  and utilities) is derived from BasicSR.
+
+* Restormer / MIRNet-v2 (https://github.com/swz30/MIRNetv2)
+  Copyright 2022 Syed Waqas Zamir et al. — Apache License 2.0.
+  The progressive-training schedule in `basicsr/train.py` and the
+  `Enhancement/` option layout follow this work.
+
+* UHDM (https://github.com/CVMI-Lab/UHDM)
+  The multi-scale perceptual/Charbonnier loss formulation in
+  `basicsr/models/losses/losses.py` follows this work.
+
+* Mamba (https://github.com/state-spaces/mamba)
+  Copyright 2023 Tri Dao, Albert Gu — Apache License 2.0.
+  `selective_scan_fn` is used by the SAMBA branch (imported at runtime from
+  the `mamba-ssm` package; no source is vendored here).
