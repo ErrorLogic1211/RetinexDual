@@ -166,6 +166,48 @@ Configs for each task:
 Checkpoints, logs, and validation images are written to `experiments/<config-name>/`.
 Adjust `num_gpu`, `batch_size_per_gpu`, and `gt_size` to fit your hardware.
 
+## Loss Function
+
+All four configs use `RetinexDuelLoss`
+([`basicsr/models/losses/losses.py`](basicsr/models/losses/losses.py)), which implements Eq. (8)
+of the paper. For each of the three output scales `s`:
+
+```
+L_s = L_Charbonnier + 0.5 * (1 - SSIM) + 0.1 * L_FFT + 0.04 * L_perceptual
+```
+
+and the scales are summed with weights `0.25 / 0.5 / 1.0` (coarse → fine).
+
+The three weighted terms are exposed in `pixel_opt` so they can be inspected and ablated
+directly from the config:
+
+| Config key | Default | Meaning |
+|------------|---------|---------|
+| `fft_weight` | `0.1` | Weight of the frequency-domain (FFT) term of Eq. (8). Set to `0` to ablate it. |
+| `perceptual_net` | `vgg16` | Backbone of the perceptual term (Sec. 3.4). `alexnet` selects an LPIPS-style variant instead. |
+| `perceptual_weight` | `0.04` | Weight of the perceptual term. |
+
+**Notes on the released code.**
+
+- The perceptual term uses **VGG16** (`VGGPerceptualLoss`), matching Sec. 3.4, with
+  `feature_layers=[2]` — i.e. the third VGG16 block, up to `relu3_3`. An alternative
+  AlexNet/LPIPS-style backbone (`AlexNetPerceptualLoss`) is also included for reference; it is
+  **not** used in the paper and was not used to train any released checkpoint. It can be enabled
+  with `perceptual_net: alexnet`.
+- The FFT term is **active** with weight `0.1`, as in Eq. (8). An earlier snapshot of this
+  repository shipped with this term zeroed out and with the AlexNet backbone selected; both were
+  release-packaging mistakes and are fixed here. The values above are the ones used for every
+  number reported in the paper and for all four checkpoints on Hugging Face.
+- `losses.py` additionally contains the term-ablation variants `RetinexDuelLoss_A/_B/_C/_D/_F/_G`
+  (each dropping or re-weighting one term of Eq. (8)). They are kept for reference and are not
+  referenced by any released config; to use one, set `type:` in `pixel_opt` accordingly.
+
+## License
+
+This project is released under the [Apache License 2.0](LICENSE). It builds on
+[BasicSR](https://github.com/XPixelGroup/BasicSR) (also Apache-2.0); see [NOTICE](NOTICE) for the
+full list of third-party components and their attributions.
+
 ## Acknowledgements
 
 This codebase is built upon [BasicSR](https://github.com/XPixelGroup/BasicSR),
