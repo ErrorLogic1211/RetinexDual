@@ -182,16 +182,47 @@ class multi_VGGPerceptualLoss(torch.nn.Module):
 
 
 class RetinexDuelLoss(torch.nn.Module):
-    def __init__(self, loss_weight=1.0, reduction='mean', lam=1, lam_p=1):
+    """Total loss of RetinexDual (Eq. (8) of the paper).
+
+    Per scale s, the loss is
+
+        L_s = L_Charbonnier + 0.5 * (1 - SSIM) + fft_weight * L_FFT
+              + perceptual_weight * L_perceptual
+
+    and the three scales are combined with weights 0.25 / 0.5 / 1.0 (coarse to
+    fine). The released checkpoints were trained with the defaults below:
+    `fft_weight=0.1`, `perceptual_net='vgg16'`, `perceptual_weight=0.04`, and
+    `feature_layers=[2]` (the third VGG16 block, i.e. up to relu3_3).
+
+    Args:
+        fft_weight (float): Weight of the frequency-domain (FFT) term of
+            Eq. (8). Default: 0.1. Set to 0 to ablate the FFT term.
+        perceptual_net (str): Backbone of the perceptual term, 'vgg16'
+            (Sec. 3.4 of the paper, used for all reported results) or
+            'alexnet' (LPIPS-style variant, not used in the paper).
+            Default: 'vgg16'.
+        perceptual_weight (float): Weight of the perceptual term. Default: 0.04.
+    """
+
+    def __init__(self, loss_weight=1.0, reduction='mean', lam=1, lam_p=1,
+                 fft_weight=0.1, perceptual_net='vgg16', perceptual_weight=0.04):
         super(RetinexDuelLoss, self).__init__()
-        self.loss_fn = AlexNetPerceptualLoss()
+        if perceptual_net == 'vgg16':
+            self.loss_fn = VGGPerceptualLoss()
+        elif perceptual_net == 'alexnet':
+            self.loss_fn = AlexNetPerceptualLoss()
+        else:
+            raise ValueError(
+                f"perceptual_net must be 'vgg16' or 'alexnet', got {perceptual_net}")
         self.lam = lam
         self.lam_p = lam_p
+        self.fft_weight = fft_weight
+        self.perceptual_weight = perceptual_weight
         self.fftloss = FFTLoss()
         self.cb = CharbonnierLoss()
         self.ssim = SSIM()
 
-        
+
     def forward(self, out3, out2, out1, gt, feature_layers=[2]):
         gt3 = gt
         gt2 = F.interpolate(gt, scale_factor=0.5, mode='bilinear', align_corners=False)
@@ -207,15 +238,13 @@ class RetinexDuelLoss(torch.nn.Module):
         lcb_loss2 = self.cb(out2,gt2)
         lcb_loss3 = self.cb(out3,gt3)
 
-        # FFT loss disabled; keep as zero tensors so loss_dict values stay tensors
-        # (reduce_loss_dict calls .mean()/torch.stack on every entry).
-        lff_loss1 = out1.new_zeros(())  # .1*self.fftloss(out1, gt1)
-        lff_loss2 = out2.new_zeros(())  # .1*self.fftloss(out2, gt2)
-        lff_loss3 = out3.new_zeros(())  # .1*self.fftloss(out3, gt3)
+        lff_loss1 = self.fft_weight * self.fftloss(out1, gt1)
+        lff_loss2 = self.fft_weight * self.fftloss(out2, gt2)
+        lff_loss3 = self.fft_weight * self.fftloss(out3, gt3)
 
-        per_loss1 = 0.04 * self.loss_fn(out1, gt1, feature_layers=feature_layers)
-        per_loss2 = 0.04 * self.loss_fn(out2, gt2, feature_layers=feature_layers)
-        per_loss3 = 0.04 * self.loss_fn(out3, gt3, feature_layers=feature_layers)
+        per_loss1 = self.perceptual_weight * self.loss_fn(out1, gt1, feature_layers=feature_layers)
+        per_loss2 = self.perceptual_weight * self.loss_fn(out2, gt2, feature_layers=feature_layers)
+        per_loss3 = self.perceptual_weight * self.loss_fn(out3, gt3, feature_layers=feature_layers)
 
         loss1 = (lcb_loss1 + ssim_loss1 + lff_loss1 + per_loss1)*0.25
         loss2 = (lcb_loss2 + ssim_loss2 + lff_loss2 + per_loss2)*0.5
@@ -234,6 +263,11 @@ class RetinexDuelLoss(torch.nn.Module):
         return loss1 + loss2 + loss3, loss_dict
 
 class VGGPerceptualLoss(torch.nn.Module):
+    """VGG16 perceptual loss (Sec. 3.4 of the paper).
+
+    This is the perceptual term used by `RetinexDuelLoss` for every reported
+    result and for all four released checkpoints.
+    """
     def __init__(self, resize=True):
         super(VGGPerceptualLoss, self).__init__()
         blocks = []
@@ -277,7 +311,12 @@ class VGGPerceptualLoss(torch.nn.Module):
         return loss
 
 class AlexNetPerceptualLoss(torch.nn.Module):
-    """LPIPS-style perceptual loss using AlexNet features."""
+    """LPIPS-style perceptual loss using AlexNet features.
+
+    Provided as an alternative to `VGGPerceptualLoss` and selectable via
+    `perceptual_net: alexnet` in `pixel_opt`. It is *not* the loss used in the
+    paper (Sec. 3.4 uses VGG16) and was not used to train any released weights.
+    """
     def __init__(self, resize=True):
         super(AlexNetPerceptualLoss, self).__init__()
         alexnet = torchvision.models.alexnet(pretrained=True).features.eval()

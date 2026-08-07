@@ -94,11 +94,14 @@ train:
     weight_decay: !!float 1e-3
     betas: [0.9, 0.999]
   
-  # losses
+  # losses  -- total loss of Eq. (8): Charbonnier + SSIM + FFT + VGG16 perceptual
   pixel_opt:
     type: RetinexDuelLoss 
     loss_weight: 1
     reduction: mean
+    fft_weight: 0.1          # weight of the frequency-domain term of Eq. (8)
+    perceptual_net: vgg16    # perceptual backbone (Sec. 3.4); 'alexnet' also available
+    perceptual_weight: 0.04
 
 # validation settings
 val:
